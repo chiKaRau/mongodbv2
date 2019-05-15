@@ -3,16 +3,18 @@ import "./Core.scss";
 //import $ from "jquery";
 //import { Form } from "react-bootstrap";
 import axios from "axios";
-import TableHeader from "../TableHeader/TableHeader.js";
-import TableBody from "../TableBody/TableBody.js";
+import Table from "../Table/Table.js";
 import Input from "../Input/Input.js";
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
+//import RoutePage from "../Page/RoutePage.js";
+import Page from "../Page/Page.js";
 
 class Core extends Component {
   state = {
     jobsAry: [],
     filterAry: [],
-    query: ""
+    query: "",
+    showItem: 10
   };
 
   componentDidMount() {
@@ -47,6 +49,22 @@ class Core extends Component {
         this.filter(this.state.query);
       }
     );
+  };
+
+  pageButtons = () => {
+    let pageAry = [];
+    let length = this.state.jobsAry.length / this.state.showItem;
+    console.log(length);
+    for (let i = 0; i < length; i++) {
+      pageAry.push(
+        <li key={i + 1} className="page-item">
+          <Link className="page-link" to={`${i + 1}`}>
+            {i + 1}
+          </Link>
+        </li>
+      );
+    }
+    return pageAry;
   };
 
   filter = str => {
@@ -165,11 +183,34 @@ class Core extends Component {
       <Router>
         <Input handleChange={this.handleChange} query={this.state.query} />
         <Switch>
-          <table id="myTable" className="table table-dark">
-            <TableHeader sorter={this.sorter} />
-            <TableBody filterAry={this.state.filterAry} />
-          </table>
+          {/*<Table sorter={this.sorter} filterAry={this.state.filterAry} />*/}
+          <Route
+            exact
+            path="/"
+            render={props => (
+              <Page
+                sorter={this.sorter}
+                filterAry={this.state.filterAry}
+                paginator={this.paginator}
+                {...props}
+              />
+            )}
+          />
+          <Route
+            path="/:number"
+            render={props => (
+              <Page
+                sorter={this.sorter}
+                filterAry={this.state.filterAry}
+                paginator={this.paginator}
+                {...props}
+              />
+            )}
+          />
         </Switch>
+        <nav aria-label="Page navigation example">
+          <ul className="pagination">{this.pageButtons()}</ul>
+        </nav>
       </Router>
     );
   }
