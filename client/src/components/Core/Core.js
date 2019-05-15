@@ -186,7 +186,7 @@ class Core extends Component {
           {/*<Table sorter={this.sorter} filterAry={this.state.filterAry} />*/}
           <Route
             exact
-            path="/"
+            path={`${process.env.PUBLIC_URL}/`}
             render={props => (
               <Page
                 sorter={this.sorter}
@@ -197,7 +197,7 @@ class Core extends Component {
             )}
           />
           <Route
-            path="/:number"
+            path={`${process.env.PUBLIC_URL}/:number`}
             render={props => (
               <Page
                 sorter={this.sorter}
