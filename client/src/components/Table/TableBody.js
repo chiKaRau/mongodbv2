@@ -6,12 +6,10 @@ class TableBody extends Component {
   }
 
   render() {
-    console.log(this.props.page);
-
     let filterAry = this.props.paginator(
       this.props.filterAry,
       this.props.page,
-      10
+      this.props.showItem
     ).items_data;
 
     const displayJob = filterAry.map(job => {

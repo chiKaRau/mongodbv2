@@ -54,7 +54,6 @@ class Core extends Component {
   pageButtons = () => {
     let pageAry = [];
     let length = this.state.jobsAry.length / this.state.showItem;
-    console.log(length);
     for (let i = 0; i < length; i++) {
       pageAry.push(
         <li key={i + 1} className="page-item">
@@ -89,63 +88,75 @@ class Core extends Component {
     });
   };
 
+  //here are situtation
+  //first click
+  //ary is unsorted
+  //check if it is asc
+  //since it is unsorted, then return asc
+
+  //second click
+  //ary is asc now
+  //check if it is asc
+  //since it is asc already, then return desc
+
+  //third click
+  //ary is desc now
+  //check if it is asc
+  //since it is desc, then return asc
+
+  //fourth click
+  //ary is asc now
+  //check if it is asc
+  //since it is asc already, then return desc
+
   sorter = n => {
-    let table = document.getElementById("myTable"),
-      rows,
-      switching = true,
-      i,
-      x,
-      y,
-      shouldSwitch,
-      dir = "asc",
-      switchcount = 0;
-    while (switching) {
-      //start by saying: no switching is done:
-      switching = false;
-      rows = table.getElementsByTagName("TR");
-      /*Loop through all table rows (except the
-   first, which contains table headers):*/
-      for (i = 1; i < rows.length - 1; i++) {
-        //Change i=0 if you have the header th a separate table.
-        //start by saying there should be no switching:
-        shouldSwitch = false;
-        /*Get the two elements you want to compare,
-     one from current row and one from the next:*/
-        x = rows[i].getElementsByTagName("TD")[n];
-        y = rows[i + 1].getElementsByTagName("TD")[n];
-        /*check if the two rows should switch place,
-     based on the direction, asc or desc:*/
-        if (dir === "asc") {
-          if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-            //if so, mark as a switch and break the loop:
-            shouldSwitch = true;
-            break;
-          }
-        } else if (dir === "desc") {
-          if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-            //if so, mark as a switch and break the loop:
-            shouldSwitch = true;
-            break;
-          }
-        }
-      }
-      if (shouldSwitch) {
-        /*If a switch has been marked, make the switch
-     and mark that a switch has been done:*/
-        rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-        switching = true;
-        //Each time a switch is done, increase this count by 1:
-        switchcount++;
-      } else {
-        /*If no switching has been done AND the direction is "asc",
-     set the direction to "desc" and run the while loop again.*/
-        if (switchcount === 0 && dir === "asc") {
-          dir = "desc";
-          switching = true;
-        }
+    let temp = this.state.filterAry;
+    let dir = "asc";
+
+    //check if it is asc for Loop
+    //if it is(there are no swtich), then dir = 'desc', return desc array
+    //if it is not(there need some swtiches),
+    //then that mean it is unsorted or desc, return asc array
+    for (let i = 0; i < temp.length - 1; i++) {
+      //if asc
+      if (Object.values(temp[i])[n] < Object.values(temp[i + 1])[n]) {
+        dir = "desc";
       }
     }
+
+    //if statement for asc or desc
+    //return asc if it is desc or unsorted
+    //return desc if it is asc
+    if (dir === "asc") {
+      temp = temp.sort((a, b) =>
+        Object.values(a)[n] < Object.values(b)[n]
+          ? -1
+          : Object.values(a)[n] > Object.values(b)[n]
+          ? 1
+          : 0
+      );
+    } else {
+      temp = temp.sort((a, b) =>
+        Object.values(a)[n] < Object.values(b)[n]
+          ? 1
+          : Object.values(a)[n] > Object.values(b)[n]
+          ? -1
+          : 0
+      );
+    }
+    this.setState({
+      filterAry: temp
+    });
   };
+
+  //Steps
+  //Table is not sort yet
+  //After user click header
+  //do the sorting for asc
+  //Now the table is asc
+  //If after A, there no asc found: swtichcount (asc) is 0 and dir === asc
+  //then Change to desc (dir = desc) and do the while loop again
+  //now the loop will go through B instead of A
 
   paginator(items, page, per_page) {
     //current user page
@@ -182,6 +193,17 @@ class Core extends Component {
     return (
       <Router>
         <Input handleChange={this.handleChange} query={this.state.query} />
+        <select
+          value={this.state.showItem}
+          onChange={this.handleChange}
+          name="showItem"
+        >
+          <option value="3">3</option>
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="15">15</option>
+          <option value="30">30</option>
+        </select>
         <Switch>
           {/*<Table sorter={this.sorter} filterAry={this.state.filterAry} />*/}
           <Route
@@ -192,6 +214,8 @@ class Core extends Component {
                 sorter={this.sorter}
                 filterAry={this.state.filterAry}
                 paginator={this.paginator}
+                tempsorter={this.tempsorter}
+                showItem={this.state.showItem}
                 {...props}
               />
             )}
@@ -203,6 +227,8 @@ class Core extends Component {
                 sorter={this.sorter}
                 filterAry={this.state.filterAry}
                 paginator={this.paginator}
+                tempsorter={this.tempsorter}
+                showItem={this.state.showItem}
                 {...props}
               />
             )}

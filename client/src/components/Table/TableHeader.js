@@ -8,13 +8,13 @@ class TableHeader extends Component {
     return (
       <thead>
         <tr>
-          <th>ID</th>
-          <th onClick={() => this.props.sorter(0)}>Post Date</th>
-          <th onClick={() => this.props.sorter(1)}>Company_Name</th>
-          <th onClick={() => this.props.sorter(2)}>Address</th>
-          <th onClick={() => this.props.sorter(3)}>Position</th>
-          <th onClick={() => this.props.sorter(4)}>Salary</th>
-          <th onClick={() => this.props.sorter(5)}>Contact Email</th>
+          <th scope="row" onClick={() => this.props.sorter(0)}>ID</th>
+          <th onClick={() => this.props.sorter(1)}>Post Date</th>
+          <th onClick={() => this.props.sorter(2)}>Company_Name</th>
+          <th onClick={() => this.props.sorter(3)}>Address</th>
+          <th onClick={() => this.props.sorter(4)}>Position</th>
+          <th onClick={() => this.props.sorter(5)}>Salary</th>
+          <th onClick={() => this.props.sorter(6)}>Contact Email</th>
         </tr>
       </thead>
     );

@@ -18,6 +18,8 @@ class Page extends Component {
         sorter={this.props.sorter}
         filterAry={this.props.filterAry}
         paginator={this.props.paginator}
+        tempsorter={this.props.tempsorter}
+        showItem={this.props.showItem}
       />
     );
   }
